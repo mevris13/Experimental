@@ -1,0 +1,9 @@
+{
+	"name": "dfazurelearning",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "f94da76d-2076-4462-a230-219a14238e3a",
+		"tenantId": "47dd3606-1bf0-4b40-8ded-cd86642101a0"
+	}
+}
