@@ -1,0 +1,36 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "dfazurelearning"
+		},
+		"AzureBlobStorageConn_connectionString": {
+			"value": ""
+		},
+		"AzureSqlDatabase_connectionString": {
+			"value": ""
+		},
+		"AzureDataLakeStorage_accountKey": {
+			"value": ""
+		},
+		"AzureSynapseAnalytics_connectionString": {
+			"value": ""
+		},
+		"DataLakeStaging_accountKey": {
+			"value": ""
+		},
+		"Trigger_properties_dpIntro_parameters_fileName": {
+			"value": "cars.csv"
+		},
+		"Trigger_properties_dpIntro_parameters_tableName": {
+			"value": "Cars"
+		},
+		"AzureDataLakeStorage_properties_typeProperties_url": {
+			"value": "https://mvdatalakestoragegen2.dfs.core.windows.net"
+		},
+		"DataLakeStaging_properties_typeProperties_url": {
+			"value": "https://mvdatalakestoragegen2.dfs.core.windows.net"
+		}
+	}
+}
