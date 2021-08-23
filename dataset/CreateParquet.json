@@ -1,0 +1,20 @@
+{
+	"name": "CreateParquet",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "Parquet/CreateParque",
+				"fileSystem": "synapasestorage"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}
