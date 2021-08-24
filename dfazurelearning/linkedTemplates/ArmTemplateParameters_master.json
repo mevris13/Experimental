@@ -20,6 +20,9 @@
 		"DataLakeStaging_accountKey": {
 			"value": ""
 		},
+		"AzureSqlAdventureWorks_connectionString": {
+			"value": ""
+		},
 		"Trigger_properties_dpIntro_parameters_fileName": {
 			"value": "cars.csv"
 		},
