@@ -1,0 +1,49 @@
+{
+	"name": "AdventureWorks",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlAdventureWorks",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "ProductID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ProductModelID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ProductSubcategoryID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ProductName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SafetyStockLevel",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "ProductModelName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ProductSubCategoryName",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "DimProduct"
+		}
+	}
+}
