@@ -973,273 +973,86 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/dpIntro')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
+			"name": "[concat(parameters('factoryName'), '/CustomerJson')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"activities": [
-					{
-						"name": "Copy data",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"sink": {
-								"type": "AzureSqlSink"
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "inputCSV",
-								"type": "DatasetReference",
-								"parameters": {
-									"fileName": {
-										"value": "@pipeline().parameters.fileName",
-										"type": "Expression"
-									}
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "outputSQL",
-								"type": "DatasetReference",
-								"parameters": {
-									"tableName": {
-										"value": "@pipeline().parameters.tableName",
-										"type": "Expression"
-									}
-								}
-							}
-						]
-					}
-				],
-				"parameters": {
-					"fileName": {
-						"type": "string"
-					},
-					"tableName": {
-						"type": "string"
-					}
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage",
+					"type": "LinkedServiceReference"
 				},
 				"annotations": [],
-				"lastPublishTime": "2021-08-09T22:55:53Z"
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "customer.json",
+						"folderPath": "Customer",
+						"fileSystem": "synapasestorage"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"customerid": {
+							"type": "integer"
+						},
+						"customername": {
+							"type": "string"
+						},
+						"registered": {
+							"type": "boolean"
+						},
+						"courses": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					}
+				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/inputCSV')]",
-				"[concat(variables('factoryId'), '/datasets/outputSQL')]"
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ParquetToSynapse')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
+			"name": "[concat(parameters('factoryName'), '/CuatomerTable')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"activities": [
+				"linkedServiceName": {
+					"referenceName": "AzureSqlAdventureWorks",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
 					{
-						"name": "CopyFromParquetToSynapses",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "ParquetSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"wildcardFileName": "*.parquet",
-									"enablePartitionDiscovery": false
-								}
-							},
-							"sink": {
-								"type": "SqlDWSink",
-								"allowPolyBase": true,
-								"polyBaseSettings": {
-									"rejectValue": 0,
-									"rejectType": "value",
-									"useTypeDefault": true
-								}
-							},
-							"enableStaging": true,
-							"stagingSettings": {
-								"linkedServiceName": {
-									"referenceName": "DataLakeStaging",
-									"type": "LinkedServiceReference"
-								},
-								"path": "synapasestorage"
-							},
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "Id",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "Id",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "Correlationid",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Correlationid",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Operationname",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Operationname",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Status",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Status",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Eventcategory",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Eventcategory",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Level",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Level",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Time",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "Time",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "Subscription",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Subscription",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Eventinitiatedby",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Eventinitiatedby",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Resourcetype",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Resourcetype",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Resourcegroup",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Resourcegroup",
-											"type": "String"
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Parquet",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "AzureSynapseAnalyticsTable",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
+						"name": "customerid",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "customername",
+						"type": "varchar"
+					},
+					{
+						"name": "registered",
+						"type": "bit"
+					},
+					{
+						"name": "courses",
+						"type": "varchar"
 					}
 				],
-				"annotations": []
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "customercourse"
+				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/Parquet')]",
-				"[concat(variables('factoryId'), '/datasets/AzureSynapseAnalyticsTable')]",
-				"[concat(variables('factoryId'), '/linkedServices/DataLakeStaging')]"
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlAdventureWorks')]"
 			]
 		}
 	]
