@@ -1,0 +1,32 @@
+{
+	"name": "CustomerDataflow",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "CustomerJson",
+						"type": "DatasetReference"
+					},
+					"name": "CustomerLog"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "CuatomerTable",
+						"type": "DatasetReference"
+					},
+					"name": "CustomerDB"
+				}
+			],
+			"transformations": [
+				{
+					"name": "CutomerJsonFlatten"
+				}
+			],
+			"script": "source(output(\n\t\tcustomerid as string,\n\t\tcustomername as string,\n\t\tregistered as boolean,\n\t\tcourses as string[]\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tdocumentForm: 'arrayOfDocuments') ~> CustomerLog\nCustomerLog foldDown(unroll(courses, courses),\n\tmapColumn(\n\t\tcustomerid,\n\t\tcustomername,\n\t\tregistered,\n\t\tcourses\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> CutomerJsonFlatten\nCutomerJsonFlatten sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tcustomerid as integer,\n\t\tcustomername as string,\n\t\tregistered as boolean,\n\t\tcourses as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tcustomerid,\n\t\tcustomername,\n\t\tregistered,\n\t\tcourses\n\t)) ~> CustomerDB"
+		}
+	}
+}
