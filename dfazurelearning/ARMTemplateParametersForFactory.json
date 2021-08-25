@@ -8,10 +8,13 @@
 		"AzureBlobStorageConn_connectionString": {
 			"value": ""
 		},
-		"AzureSqlDatabase_connectionString": {
+		"AzureDataLakeStorage_accountKey": {
 			"value": ""
 		},
-		"AzureDataLakeStorage_accountKey": {
+		"AzureSqlAdventureWorks_connectionString": {
+			"value": ""
+		},
+		"AzureSqlDatabase_connectionString": {
 			"value": ""
 		},
 		"AzureSynapseAnalytics_connectionString": {
@@ -20,20 +23,17 @@
 		"DataLakeStaging_accountKey": {
 			"value": ""
 		},
-		"AzureSqlAdventureWorks_connectionString": {
-			"value": ""
+		"AzureDataLakeStorage_properties_typeProperties_url": {
+			"value": "https://mvdatalakestoragegen2.dfs.core.windows.net"
+		},
+		"DataLakeStaging_properties_typeProperties_url": {
+			"value": "https://mvdatalakestoragegen2.dfs.core.windows.net"
 		},
 		"Trigger_properties_dpIntro_parameters_fileName": {
 			"value": "cars.csv"
 		},
 		"Trigger_properties_dpIntro_parameters_tableName": {
 			"value": "Cars"
-		},
-		"AzureDataLakeStorage_properties_typeProperties_url": {
-			"value": "https://mvdatalakestoragegen2.dfs.core.windows.net"
-		},
-		"DataLakeStaging_properties_typeProperties_url": {
-			"value": "https://mvdatalakestoragegen2.dfs.core.windows.net"
 		}
 	}
 }

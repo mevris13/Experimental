@@ -11,13 +11,17 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorageConn'"
 		},
-		"AzureSqlDatabase_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase'"
-		},
 		"AzureDataLakeStorage_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage'"
+		},
+		"AzureSqlAdventureWorks_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlAdventureWorks'"
+		},
+		"AzureSqlDatabase_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase'"
 		},
 		"AzureSynapseAnalytics_connectionString": {
 			"type": "secureString",
@@ -27,9 +31,13 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'DataLakeStaging'"
 		},
-		"AzureSqlAdventureWorks_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'AzureSqlAdventureWorks'"
+		"AzureDataLakeStorage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://mvdatalakestoragegen2.dfs.core.windows.net"
+		},
+		"DataLakeStaging_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://mvdatalakestoragegen2.dfs.core.windows.net"
 		},
 		"Trigger_properties_dpIntro_parameters_fileName": {
 			"type": "string",
@@ -38,14 +46,6 @@
 		"Trigger_properties_dpIntro_parameters_tableName": {
 			"type": "string",
 			"defaultValue": "Cars"
-		},
-		"AzureDataLakeStorage_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://mvdatalakestoragegen2.dfs.core.windows.net"
-		},
-		"DataLakeStaging_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://mvdatalakestoragegen2.dfs.core.windows.net"
 		},
 		"containerUri": {
 			"type": "string",
@@ -77,20 +77,20 @@
 					"AzureBlobStorageConn_connectionString": {
 						"value": "[parameters('AzureBlobStorageConn_connectionString')]"
 					},
-					"AzureSqlDatabase_connectionString": {
-						"value": "[parameters('AzureSqlDatabase_connectionString')]"
-					},
 					"AzureDataLakeStorage_accountKey": {
 						"value": "[parameters('AzureDataLakeStorage_accountKey')]"
+					},
+					"AzureSqlAdventureWorks_connectionString": {
+						"value": "[parameters('AzureSqlAdventureWorks_connectionString')]"
+					},
+					"AzureSqlDatabase_connectionString": {
+						"value": "[parameters('AzureSqlDatabase_connectionString')]"
 					},
 					"AzureSynapseAnalytics_connectionString": {
 						"value": "[parameters('AzureSynapseAnalytics_connectionString')]"
 					},
 					"DataLakeStaging_accountKey": {
 						"value": "[parameters('DataLakeStaging_accountKey')]"
-					},
-					"AzureSqlAdventureWorks_connectionString": {
-						"value": "[parameters('AzureSqlAdventureWorks_connectionString')]"
 					},
 					"AzureDataLakeStorage_properties_typeProperties_url": {
 						"value": "[parameters('AzureDataLakeStorage_properties_typeProperties_url')]"
