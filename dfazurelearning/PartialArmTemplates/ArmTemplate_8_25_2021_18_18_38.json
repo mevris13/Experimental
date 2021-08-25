@@ -1,0 +1,169 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "dfazurelearning"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/CustomerDataflow')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CustomerJson",
+								"type": "DatasetReference"
+							},
+							"name": "CustomerLog"
+						},
+						{
+							"dataset": {
+								"referenceName": "Customer2Json",
+								"type": "DatasetReference"
+							},
+							"name": "Customer2Log"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "CuatomerTable",
+								"type": "DatasetReference"
+							},
+							"name": "CustomerDB"
+						},
+						{
+							"dataset": {
+								"referenceName": "Customer2",
+								"type": "DatasetReference"
+							},
+							"name": "Customer2DB"
+						}
+					],
+					"transformations": [
+						{
+							"name": "CutomerJsonFlatten"
+						},
+						{
+							"name": "FlattenCustomer"
+						}
+					],
+					"script": "source(output(\n\t\tcustomerid as string,\n\t\tcustomername as string,\n\t\tregistered as boolean,\n\t\tcourses as string[]\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tdocumentForm: 'arrayOfDocuments') ~> CustomerLog\nsource(output(\n\t\tcustomerid as string,\n\t\tcustomername as string,\n\t\tregistered as boolean,\n\t\tcourses as string[],\n\t\tdetails as (mobile as string, city as string)\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tdocumentForm: 'arrayOfDocuments') ~> Customer2Log\nCustomerLog foldDown(unroll(courses, courses),\n\tmapColumn(\n\t\tcustomerid,\n\t\tcustomername,\n\t\tregistered,\n\t\tcourses\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> CutomerJsonFlatten\nCustomer2Log foldDown(unroll(courses, courses),\n\tmapColumn(\n\t\tcustomerid,\n\t\tcustomername,\n\t\tregistered,\n\t\tcourses,\n\t\tmobile = details.mobile,\n\t\tcity = details.city\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> FlattenCustomer\nCutomerJsonFlatten sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tcustomerid as integer,\n\t\tcustomername as string,\n\t\tregistered as boolean,\n\t\tcourses as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tcustomerid,\n\t\tcustomername,\n\t\tregistered,\n\t\tcourses\n\t)) ~> CustomerDB\nFlattenCustomer sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tcustomerid as integer,\n\t\tcustomername as string,\n\t\tregistered as boolean,\n\t\tcourses as string,\n\t\tmobile as string,\n\t\tcity as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tcustomerid,\n\t\tcustomername,\n\t\tregistered,\n\t\tcourses,\n\t\tmobile,\n\t\tcity\n\t)) ~> Customer2DB"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Customer2Json')]",
+				"[concat(variables('factoryId'), '/datasets/Customer2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Customer2Json')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "customer2.json",
+						"folderPath": "Customer",
+						"fileSystem": "synapasestorage"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"customerid": {
+							"type": "integer"
+						},
+						"customername": {
+							"type": "string"
+						},
+						"registered": {
+							"type": "boolean"
+						},
+						"courses": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						},
+						"details": {
+							"type": "object",
+							"properties": {
+								"mobile": {
+									"type": "string"
+								},
+								"city": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Customer2')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlAdventureWorks",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "customerid",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "customername",
+						"type": "varchar"
+					},
+					{
+						"name": "registered",
+						"type": "bit"
+					},
+					{
+						"name": "courses",
+						"type": "varchar"
+					},
+					{
+						"name": "mobile",
+						"type": "varchar"
+					},
+					{
+						"name": "city",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "customercourse2"
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
